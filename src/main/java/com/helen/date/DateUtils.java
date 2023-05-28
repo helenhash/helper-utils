@@ -126,4 +126,59 @@ public class DateUtils {
         }
         return result;
     }
+    
+    public static Set<LocalDate> genDateRange(LocalDate from, LocalDate to){
+		Set<LocalDate> dates = new TreeSet<>();
+		from = from.withDayOfMonth(1);
+		to = to.withDayOfMonth(1);
+		Period diff = Period.between(from, to);
+		int numOfMonth = diff.getYears()*12 + diff.getMonths();
+		for (int i = 0; i <= numOfMonth; i++) {
+			LocalDate d = KpfUtils.setFinancialDayOfMonth(from.plusMonths(i));
+			dates.add(d);
+		}
+		return dates;
+	}
+    
+    public int getQuarterNumberByDate(LocalDate date) {
+		if(date == null) {
+			return 0;
+		}
+		return date.get(IsoFields.QUARTER_OF_YEAR);
+	}
+	
+	public String convertNumberToWord(int num) {
+		switch (num) {
+		case 1:
+			return "First";
+		case 2:
+			return "Second";
+		case 3:
+			return "Third";
+		case 4:
+			return "Fourth";
+		default:
+			return "NA";
+		}
+	}
+	
+	public String formatQuarter(LocalDate quarterDate, String pattern) {
+		if(quarterDate == null) {
+			return Constants.NA;
+		}
+		int quarter = quarterDate.get(IsoFields.QUARTER_OF_YEAR);
+		switch (pattern) {
+		case "Q-YYYY":
+	    	String quarterInfo = "Q" + quarter + "-" + quarterDate.getYear();
+	    	return quarterInfo;
+		case "Quarter-YYYY":
+        	return KpfSupport.convertNumberToWord(quarter) + " Quarter " + quarterDate.getYear();
+		default:
+			return Constants.NA;
+		}
+	}
+	
+	public String formatQuarter(int quarterNumber, LocalDate date) {
+		return KpfSupport.convertNumberToWord(quarterNumber) + " Quarter " + date.getYear();
+	}
 }
