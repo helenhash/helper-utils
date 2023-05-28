@@ -113,5 +113,56 @@ public class NumberUtils {
 				.setScale(2, RoundingMode.HALF_UP);
 	}
 	
+	public BigDecimal abs(BigDecimal value) {
+		if(value == null) {
+			return BigDecimal.ZERO;
+		} else {
+			return value.abs();
+		}
+	}
+	
+	public String formatNumber(BigDecimal number, String formatType) {
+        BigDecimal decimal = new BigDecimal(1000);
+        String result = "";
+        String formatTypeString = "";
+        if(number == null) {
+        	return Constants.NA;
+        }
+        if (number.abs().compareTo(decimal) >= 1) {
+        	result = parseNumbersGreaterThanThousand(number, 1);
+        } else {
+			if("X".equals(formatType)) {
+				result = parseNumberLessThanThousand(number, 1);
+			} else {
+				result = parseNumberLessThanThousand(number, 1);
+			}
+        }
+        if (number.compareTo(BigDecimal.ZERO) < 0){
+        	String negativeFormat = "(%s)";
+        	result = String.format(negativeFormat, result);
+		}
+        if(FormulaConstants.PERCENT_TYPE.equals(formatType)) {
+        	formatTypeString = result + "%";
+        } else if(FormulaConstants.CURRENCY_TYPE.equals(formatType)) {
+        	formatTypeString = "$" + result;
+        } else if("X".equals(formatType)) {
+        	formatTypeString = result + "x";
+        } else {
+        	formatTypeString = result;
+        }
+        return formatTypeString;
+    }
 
+	public String parseNumbersGreaterThanThousand(BigDecimal noToBeFormatted, int scale) {
+        DecimalFormat formatter = new DecimalFormat("#,###.##");
+        noToBeFormatted = noToBeFormatted.abs().setScale(scale, BigDecimal.ROUND_HALF_UP);
+        return formatter.format(noToBeFormatted);
+    }
+
+	public String parseNumberLessThanThousand(BigDecimal noToBeFormatted, int scale) {
+        DecimalFormat formatter = new DecimalFormat("#,##0.0");
+        noToBeFormatted = noToBeFormatted.abs().setScale(scale, BigDecimal.ROUND_HALF_UP);
+        return formatter.format(noToBeFormatted);
+    }
+	
 }
