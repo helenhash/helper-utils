@@ -6,13 +6,13 @@ import org.apache.commons.lang3.StringUtils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.IsoFields;
 import java.util.Date;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 
 @UtilityClass
@@ -20,6 +20,7 @@ public class DateUtils {
 
     /**
      * Convert from date to string with provided date format.
+     *
      * @param date
      * @param format
      * @return
@@ -35,22 +36,23 @@ public class DateUtils {
 
     /**
      * Convert date to String with any supported formats.
+     *
      * @param date
      * @return
      */
     public static String toString(Date date) {
         AtomicReference<String> value = new AtomicReference<>(StringUtils.EMPTY);
         DateConstants.SUPPORTED_DATE_FORMATS.forEach(fmt -> {
-            if (StringUtils.isEmpty(value.get())){
+            if (StringUtils.isEmpty(value.get())) {
                 DateFormat f = new SimpleDateFormat(fmt);
                 try {
                     value.set(f.format(date));
-                } catch (DateTimeParseException e){
+                } catch (DateTimeParseException e) {
                     value.set(StringUtils.EMPTY);
                 }
             }
         });
-        if (StringUtils.isEmpty(value.get())){
+        if (StringUtils.isEmpty(value.get())) {
             throw new RuntimeException("Unknown date format.");
         }
         return value.get();
@@ -83,6 +85,7 @@ public class DateUtils {
 
     /**
      * Convert a date string to LocalDate.
+     *
      * @param date
      * @param format
      * @param defIfFail - set null if fail to convert.
@@ -93,7 +96,7 @@ public class DateUtils {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
             value = LocalDate.parse(date, formatter);
-        } catch (DateTimeParseException  e){
+        } catch (DateTimeParseException e) {
             value = defIfFail;
         }
         return value;
@@ -126,59 +129,56 @@ public class DateUtils {
         }
         return result;
     }
-    
-    public static Set<LocalDate> genDateRange(LocalDate from, LocalDate to){
-		Set<LocalDate> dates = new TreeSet<>();
-		from = from.withDayOfMonth(1);
-		to = to.withDayOfMonth(1);
-		Period diff = Period.between(from, to);
-		int numOfMonth = diff.getYears()*12 + diff.getMonths();
-		for (int i = 0; i <= numOfMonth; i++) {
-			LocalDate d = KpfUtils.setFinancialDayOfMonth(from.plusMonths(i));
-			dates.add(d);
-		}
-		return dates;
-	}
-    
+
+    public static Set<LocalDate> genDateRange(LocalDate from, LocalDate to) {
+        Set<LocalDate> dates = new TreeSet<>();
+        from = from.withDayOfMonth(1);
+        to = to.withDayOfMonth(1);
+        Period diff = Period.between(from, to);
+        int numOfMonth = diff.getYears() * 12 + diff.getMonths();
+        for (int i = 0; i <= numOfMonth; i++) {
+            LocalDate d = from.plusMonths(i).withDayOfMonth(1);
+            dates.add(d);
+        }
+        return dates;
+    }
+
     public int getQuarterNumberByDate(LocalDate date) {
-		if(date == null) {
-			return 0;
-		}
-		return date.get(IsoFields.QUARTER_OF_YEAR);
-	}
-	
-	public String convertNumberToWord(int num) {
-		switch (num) {
-		case 1:
-			return "First";
-		case 2:
-			return "Second";
-		case 3:
-			return "Third";
-		case 4:
-			return "Fourth";
-		default:
-			return "NA";
-		}
-	}
-	
-	public String formatQuarter(LocalDate quarterDate, String pattern) {
-		if(quarterDate == null) {
-			return Constants.NA;
-		}
-		int quarter = quarterDate.get(IsoFields.QUARTER_OF_YEAR);
-		switch (pattern) {
-		case "Q-YYYY":
-	    	String quarterInfo = "Q" + quarter + "-" + quarterDate.getYear();
-	    	return quarterInfo;
-		case "Quarter-YYYY":
-        	return KpfSupport.convertNumberToWord(quarter) + " Quarter " + quarterDate.getYear();
-		default:
-			return Constants.NA;
-		}
-	}
-	
-	public String formatQuarter(int quarterNumber, LocalDate date) {
-		return KpfSupport.convertNumberToWord(quarterNumber) + " Quarter " + date.getYear();
-	}
+        if (date == null) {
+            return 0;
+        }
+        return date.get(IsoFields.QUARTER_OF_YEAR);
+    }
+
+    public String convertNumberToWord(int num) {
+        switch (num) {
+            case 1:
+                return "First";
+            case 2:
+                return "Second";
+            case 3:
+                return "Third";
+            case 4:
+                return "Fourth";
+            default:
+                return "NA";
+        }
+    }
+
+    public String formatQuarter(LocalDate quarterDate, String pattern, String defIfNull) {
+        if (quarterDate == null) {
+            return defIfNull;
+        }
+        int quarter = quarterDate.get(IsoFields.QUARTER_OF_YEAR);
+        switch (pattern) {
+            case "Q-YYYY":
+                String quarterInfo = "Q" + quarter + "-" + quarterDate.getYear();
+                return quarterInfo;
+            case "Quarter-YYYY":
+                return convertNumberToWord(quarter) + " Quarter " + quarterDate.getYear();
+            default:
+                return defIfNull;
+        }
+    }
+
 }

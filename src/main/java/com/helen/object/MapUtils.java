@@ -31,7 +31,7 @@ public class MapUtils {
      * @param <T>
      * @return
      */
-    public static <K, T> Map<K, List<T>> groupBy(Collection<T> values, Function<T, K> keyGetter) {
+    public static <K, T> Map<K, List<T>> toGroupMap(Collection<T> values, Function<T, K> keyGetter) {
         Map<K, List<T>> result = new HashMap<>();
         values.forEach(t -> {
             K key = keyGetter.apply(t);

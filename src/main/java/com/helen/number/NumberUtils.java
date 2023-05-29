@@ -1,6 +1,7 @@
 package com.helen.number;
 
 import lombok.experimental.UtilityClass;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -12,6 +13,7 @@ public class NumberUtils {
 
     /**
      * Round bigDecimal number with some decimal places.
+     *
      * @param number
      * @param decimal
      * @return
@@ -25,144 +27,132 @@ public class NumberUtils {
         return bigDecNum.setScale(decimal, RoundingMode.HALF_UP);
     }
 
-    public static BigDecimal doubleToDecimal(double d){
+    public static BigDecimal doubleToDecimal(double d) {
         BigDecimal b = new BigDecimal(d, MathContext.DECIMAL64);
         return b;
     }
 
-    public static String formatNumber(BigDecimal number, int dec) {
-        DecimalFormat df = new DecimalFormat("#,###.00");
-        return df.format(number);
-    }
-    
     public boolean isDeepEqual(BigDecimal value1, BigDecimal value2) {
-		if (value1 == null && value2 == null) {
-			return true;
-		}
-		return value1 != null && value1.equals(value2);
-	}
-
-	public boolean isGreater0(BigDecimal value) {
-		return value != null && value.compareTo(BigDecimal.ZERO) > 0;
-	}
-	
-	public boolean isLessThan0(BigDecimal value) {
-		return value != null && value.compareTo(BigDecimal.ZERO) < 0;
-	}
-	
-	public BigDecimal subtract(BigDecimal value1, BigDecimal value2) {	
-		value1 = ObjectUtils.defaultIfNull(value1, BigDecimal.ZERO);
-		value2 = ObjectUtils.defaultIfNull(value2, BigDecimal.ZERO);
-		return value1.subtract(value2);
-	}
-
-	public BigDecimal subtractAbs(BigDecimal value1, BigDecimal value2) {	
-		value1 = ObjectUtils.defaultIfNull(value1, BigDecimal.ZERO);
-		value2 = ObjectUtils.defaultIfNull(value2, BigDecimal.ZERO);
-		return value1.subtract(value2).abs();
-	}
-	
-	public BigDecimal divide(BigDecimal value1, BigDecimal value2) {
-		value1 = ObjectUtils.defaultIfNull(value1, BigDecimal.ZERO);
-		return (value2 == null || BigDecimal.ZERO.compareTo(value2) == 0)
-				? null
-				: (value1.divide(value2, 10, RoundingMode.HALF_UP));
-	}
-
-	public BigDecimal add(BigDecimal value1, BigDecimal value2) {
-		value1 = ObjectUtils.defaultIfNull(value1, BigDecimal.ZERO);
-		value2 = ObjectUtils.defaultIfNull(value2, BigDecimal.ZERO);
-		return value1.add(value2);
-	}
-	
-	public BigDecimal add(BigDecimal... n) {
-		BigDecimal result = BigDecimal.ZERO;
-		for (BigDecimal i : n) {
-			if (i != null) {
-				result = result.add(i);
-			}
-		}
-		return result;
-	}
-
-	public BigDecimal subtract(BigDecimal minuend, BigDecimal... n) {
-		minuend = ObjectUtils.defaultIfNull(minuend, BigDecimal.ZERO);
-		return minuend.subtract(add(n));
-	}
-
-	public BigDecimal multiply(BigDecimal value1, BigDecimal value2) {
-		value1 = ObjectUtils.defaultIfNull(value1, BigDecimal.ZERO);
-		value2 = ObjectUtils.defaultIfNull(value2, BigDecimal.ZERO);
-		return value1.multiply(value2);
-	}
-	
-	public BigDecimal round1000(BigDecimal value) {
-		value = ObjectUtils.defaultIfNull(value, BigDecimal.ZERO);
-		return divide(value, BigDecimal.valueOf(1000));
-	}
-	
-	public BigDecimal multiply1000(BigDecimal value) {
-		value = ObjectUtils.defaultIfNull(value, BigDecimal.ZERO);
-		return multiply(value, BigDecimal.valueOf(1000));
-	}
-	
-	public BigDecimal calculatePercentage(BigDecimal amount1, BigDecimal amount2) {
-		BigDecimal ratio = divide(amount1, amount2);
-		return (ratio == null) ? null :
-				ratio.multiply(BigDecimal.valueOf(100))
-				.setScale(2, RoundingMode.HALF_UP);
-	}
-	
-	public BigDecimal abs(BigDecimal value) {
-		if(value == null) {
-			return BigDecimal.ZERO;
-		} else {
-			return value.abs();
-		}
-	}
-	
-	public String formatNumber(BigDecimal number, String formatType) {
-        BigDecimal decimal = new BigDecimal(1000);
-        String result = "";
-        String formatTypeString = "";
-        if(number == null) {
-        	return Constants.NA;
+        if (value1 == null && value2 == null) {
+            return true;
         }
-        if (number.abs().compareTo(decimal) >= 1) {
-        	result = parseNumbersGreaterThanThousand(number, 1);
+        return value1 != null && value1.equals(value2);
+    }
+
+    public boolean isGreater0(BigDecimal value) {
+        return value != null && value.compareTo(BigDecimal.ZERO) > 0;
+    }
+
+    public boolean isLessThan0(BigDecimal value) {
+        return value != null && value.compareTo(BigDecimal.ZERO) < 0;
+    }
+
+    public BigDecimal subtract(BigDecimal value1, BigDecimal value2) {
+        value1 = ObjectUtils.defaultIfNull(value1, BigDecimal.ZERO);
+        value2 = ObjectUtils.defaultIfNull(value2, BigDecimal.ZERO);
+        return value1.subtract(value2);
+    }
+
+    public BigDecimal subtractAbs(BigDecimal value1, BigDecimal value2) {
+        value1 = ObjectUtils.defaultIfNull(value1, BigDecimal.ZERO);
+        value2 = ObjectUtils.defaultIfNull(value2, BigDecimal.ZERO);
+        return value1.subtract(value2).abs();
+    }
+
+    public BigDecimal divide(BigDecimal value1, BigDecimal value2) {
+        value1 = ObjectUtils.defaultIfNull(value1, BigDecimal.ZERO);
+        return (value2 == null || BigDecimal.ZERO.compareTo(value2) == 0)
+                ? null
+                : (value1.divide(value2, 10, RoundingMode.HALF_UP));
+    }
+
+    public BigDecimal add(BigDecimal value1, BigDecimal value2) {
+        value1 = ObjectUtils.defaultIfNull(value1, BigDecimal.ZERO);
+        value2 = ObjectUtils.defaultIfNull(value2, BigDecimal.ZERO);
+        return value1.add(value2);
+    }
+
+    public BigDecimal add(BigDecimal... n) {
+        BigDecimal result = BigDecimal.ZERO;
+        for (BigDecimal i : n) {
+            if (i != null) {
+                result = result.add(i);
+            }
+        }
+        return result;
+    }
+
+    public BigDecimal subtract(BigDecimal minuend, BigDecimal... n) {
+        minuend = ObjectUtils.defaultIfNull(minuend, BigDecimal.ZERO);
+        return minuend.subtract(add(n));
+    }
+
+    public BigDecimal multiply(BigDecimal value1, BigDecimal value2) {
+        value1 = ObjectUtils.defaultIfNull(value1, BigDecimal.ZERO);
+        value2 = ObjectUtils.defaultIfNull(value2, BigDecimal.ZERO);
+        return value1.multiply(value2);
+    }
+
+    public BigDecimal round1000(BigDecimal value) {
+        value = ObjectUtils.defaultIfNull(value, BigDecimal.ZERO);
+        return divide(value, BigDecimal.valueOf(1000));
+    }
+
+    public BigDecimal multiply1000(BigDecimal value) {
+        value = ObjectUtils.defaultIfNull(value, BigDecimal.ZERO);
+        return multiply(value, BigDecimal.valueOf(1000));
+    }
+
+    public BigDecimal percent(BigDecimal amount1, BigDecimal amount2) {
+        BigDecimal ratio = divide(amount1, amount2);
+        return (ratio == null) ? null :
+                ratio.multiply(BigDecimal.valueOf(100))
+                        .setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public BigDecimal abs(BigDecimal value) {
+        if (value == null) {
+            return BigDecimal.ZERO;
         } else {
-			if("X".equals(formatType)) {
-				result = parseNumberLessThanThousand(number, 1);
-			} else {
-				result = parseNumberLessThanThousand(number, 1);
-			}
+            return value.abs();
         }
-        if (number.compareTo(BigDecimal.ZERO) < 0){
-        	String negativeFormat = "(%s)";
-        	result = String.format(negativeFormat, result);
-		}
-        if(FormulaConstants.PERCENT_TYPE.equals(formatType)) {
-        	formatTypeString = result + "%";
-        } else if(FormulaConstants.CURRENCY_TYPE.equals(formatType)) {
-        	formatTypeString = "$" + result;
-        } else if("X".equals(formatType)) {
-        	formatTypeString = result + "x";
-        } else {
-        	formatTypeString = result;
-        }
+    }
+
+    public String formatNumberWithUnit(BigDecimal number, String formatType, int scale, String defIfNull) {
+        String result;
+        String formatTypeString;
+        if (number == null) return defIfNull;
+        result = formatNumber(number, scale, defIfNull == null ? "NA" : defIfNull);
+        formatTypeString = switch (formatType) {
+            case NumberConstants.PERCENT_TYPE -> result + "%";
+            case NumberConstants.CURRENCY_TYPE -> "$" + result;
+            case NumberConstants.X_TYPE -> result + "x";
+            default -> result;
+        };
         return formatTypeString;
     }
 
-	public String parseNumbersGreaterThanThousand(BigDecimal noToBeFormatted, int scale) {
-        DecimalFormat formatter = new DecimalFormat("#,###.##");
-        noToBeFormatted = noToBeFormatted.abs().setScale(scale, BigDecimal.ROUND_HALF_UP);
-        return formatter.format(noToBeFormatted);
+    public String formatNumber(BigDecimal number, int scale, String defIfNull) {
+        BigDecimal decimal = new BigDecimal(1000);
+        String result;
+        if (number == null) return defIfNull == null ? "NA" : defIfNull;
+        if (number.abs().compareTo(decimal) >= 1) {
+            result = formatDecimal(number, scale, "#,###.##", defIfNull);
+        } else {
+            result = formatDecimal(number, scale, "#,##0.0", defIfNull);
+        }
+        if (isLessThan0(number)) {
+            String negativeFormat = "(%s)";
+            result = String.format(negativeFormat, result);
+        }
+        return result;
     }
 
-	public String parseNumberLessThanThousand(BigDecimal noToBeFormatted, int scale) {
-        DecimalFormat formatter = new DecimalFormat("#,##0.0");
-        noToBeFormatted = noToBeFormatted.abs().setScale(scale, BigDecimal.ROUND_HALF_UP);
-        return formatter.format(noToBeFormatted);
+    public static String formatDecimal(BigDecimal number, int scale, String format, String defIfNull) {
+        if (number == null) return defIfNull == null ? "NA" : defIfNull;
+        DecimalFormat formatter = new DecimalFormat(format);
+        number = number.abs().setScale(scale, RoundingMode.HALF_UP);
+        return formatter.format(number);
     }
-	
+
 }
