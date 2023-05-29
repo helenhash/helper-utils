@@ -28,8 +28,7 @@ public class NumberUtils {
     }
 
     public static BigDecimal doubleToDecimal(double d) {
-        BigDecimal b = new BigDecimal(d, MathContext.DECIMAL64);
-        return b;
+        return new BigDecimal(d, MathContext.DECIMAL64);
     }
 
     public boolean isDeepEqual(BigDecimal value1, BigDecimal value2) {
