@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import org.apache.commons.beanutils.BeanUtils;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.regex.Pattern;
 
 @UtilityClass
 public class ObjectUtils {
@@ -42,4 +43,7 @@ public class ObjectUtils {
         return objRt;
     }
 
+    public String escapeRegular(String regex) {
+        return Pattern.compile("([-/\\\\^$*+?.()|\\[\\]{}])").matcher(regex).replaceAll("\\\\$1");
+    }
 }
