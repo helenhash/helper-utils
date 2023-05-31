@@ -7,9 +7,14 @@ Provide popular utility function(s) for application, so we just focus on logic, 
 * Convert/Format a Date/LocalDate to String and vice versus by provided format
   * 2023-09-09 -> with MM/dd/yyyy - 09/09/2023
   * ...
+```java
+String dateStr = DateUtils.toString(LocalDate.now(), "MM/dd/yyyy");
+```
 * Format Quarter by some format
   * 03/31/2023 -> First Quarter, 2023 
-
+```java
+String quarter = DateUtils.formatQuarter(LocalDate.now(), "Quarter-YYYY");
+```
 ### Number
 
 * Mathematical operation - add/subtract/divide/multiple
@@ -19,7 +24,9 @@ Provide popular utility function(s) for application, so we just focus on logic, 
   * 123,456,789.78
 * Format number to string with provide format type - currency, percent ...
   * $ 123,456,789.78
-
+```java
+String numberFmt = NumberUtils.formatNumber(BigDecimal.valueOf("1234"), 2, "NA");
+```
 ### Others
 #### List
 
@@ -34,14 +41,20 @@ Provide popular utility function(s) for application, so we just focus on logic, 
 #### Object
 
 * Clone an object
+```java
+    Course course = new Course();
+    course.setName("Test");
+    course.setCodes(Arrays.asList("CS"));
+    Course cloneCourse = ObjectUtils.cloneObject(courseEntity, course); 
+```
 * Copy properties of object to another
 
 ```java
     Course course = new Course();
-    course.setName("Computer Science");
+    course.setName("Test");
     course.setCodes(Arrays.asList("CS"));
     course.setEnrolledStudent("ST-1", new Student());
     CourseEntity courseEntity = new CourseEntity();
-    ObjectUtils.copyObject(courseEntity, course);
+    ObjectUtils.copyObject(courseEntity, course); // copy course to courseEntity
 ```
 This will copy the properties with the same name only
