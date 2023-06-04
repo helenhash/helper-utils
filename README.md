@@ -7,8 +7,13 @@ Provide popular utility function(s) for application, so we just focus on logic, 
 * Convert/Format a Date/LocalDate to String and vice versus by provided format
   * 2023-09-09 -> with MM/dd/yyyy - 09/09/2023
   * ...
+* Check a string date is valid or not.
 ```java
 String dateStr = DateUtils.toString(LocalDate.now(), "MM/dd/yyyy");
+String dateStr = DateUtils.toString(new Date(), "MM/dd/yyyy");
+
+LocalDate date = DateUtils.toLocalDate("03/10/2022", "MM/dd/yyyy");
+LocalDate date = DateUtils.toLocalDate("03/10/2022"); // any format match
 ```
 * Format Quarter by some format
   * 03/31/2023 -> First Quarter, 2023 
@@ -31,6 +36,13 @@ String numberFmt = NumberUtils.formatNumber(BigDecimal.valueOf("1234"), 2, "NA")
 #### List
 
 * Merge multiple lists
+```java
+List<Student> s = ListUtils.mergeCollections(list1, list2);
+```
+* Merge multiple objects to list
+```java
+List<Student> s = ListUtils.mergeCollections(obj1, obj2);
+```
 * ... to be continued
 
 #### Maps
@@ -58,3 +70,5 @@ String numberFmt = NumberUtils.formatNumber(BigDecimal.valueOf("1234"), 2, "NA")
     ObjectUtils.copyObject(courseEntity, course); // copy course to courseEntity
 ```
 This will copy the properties with the same name only
+
+

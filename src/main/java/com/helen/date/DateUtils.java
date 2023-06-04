@@ -34,30 +34,6 @@ public class DateUtils {
         return value;
     }
 
-    /**
-     * Convert date to String with any supported formats.
-     *
-     * @param date
-     * @return
-     */
-    public static String toString(Date date) {
-        AtomicReference<String> value = new AtomicReference<>(StringUtils.EMPTY);
-        DateConstants.SUPPORTED_DATE_FORMATS.forEach(fmt -> {
-            if (StringUtils.isEmpty(value.get())) {
-                DateFormat f = new SimpleDateFormat(fmt);
-                try {
-                    value.set(f.format(date));
-                } catch (DateTimeParseException e) {
-                    value.set(StringUtils.EMPTY);
-                }
-            }
-        });
-        if (StringUtils.isEmpty(value.get())) {
-            throw new RuntimeException("Unknown date format.");
-        }
-        return value.get();
-    }
-
     public static String toString(LocalDate date, String format) {
         String value = StringUtils.EMPTY;
         if (date != null) {
@@ -100,6 +76,30 @@ public class DateUtils {
             value = defIfFail;
         }
         return value;
+    }
+
+    /**
+     * Convert String to date with any support formats.
+     * @param date
+     * @param defIfFail
+     * @return
+     */
+    public static LocalDate toLocalDate(String date, LocalDate defIfFail) {
+        AtomicReference<LocalDate> value = new AtomicReference<>();
+        DateConstants.SUPPORTED_DATE_FORMATS.forEach(fmt -> {
+            if (value.get() == null) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(fmt);
+                try {
+                    value.set(LocalDate.parse(date, formatter));
+                } catch (DateTimeParseException e) {
+                    value.set(null);
+                }
+            }
+        });
+        if (value.get() == null) {
+            value.set(defIfFail);
+        }
+        return value.get();
     }
 
     public static boolean isValidDate(String inDate, String format) {

@@ -24,7 +24,7 @@ public class NumberUtils {
 
     public static BigDecimal roundNumber(double number, int decimal) {
         BigDecimal bigDecNum = doubleToDecimal(number);
-        return bigDecNum.setScale(decimal, RoundingMode.HALF_UP);
+        return roundNumber(bigDecNum, decimal);
     }
 
     public static BigDecimal doubleToDecimal(double d) {

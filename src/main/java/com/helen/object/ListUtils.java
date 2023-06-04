@@ -15,4 +15,11 @@ public class ListUtils {
         return new ArrayList<>(result);
     }
 
+    public static <T> List<T> mergeObjects(T... objects) {
+        Set<T> result = new HashSet<>();
+        for (T object : objects)
+            result.add(object);
+        return new ArrayList<>(result);
+    }
+
 }
