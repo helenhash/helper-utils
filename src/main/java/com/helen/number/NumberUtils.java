@@ -4,9 +4,11 @@ import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.regex.Pattern;
 
 @UtilityClass
 public class NumberUtils {
@@ -20,15 +22,6 @@ public class NumberUtils {
      */
     public static BigDecimal roundNumber(BigDecimal number, int decimal) {
         return number.setScale(decimal, RoundingMode.HALF_UP);
-    }
-
-    public static BigDecimal roundNumber(double number, int decimal) {
-        BigDecimal bigDecNum = doubleToDecimal(number);
-        return roundNumber(bigDecNum, decimal);
-    }
-
-    public static BigDecimal doubleToDecimal(double d) {
-        return new BigDecimal(d, MathContext.DECIMAL64);
     }
 
     public boolean isDeepEqual(BigDecimal value1, BigDecimal value2) {
@@ -154,4 +147,21 @@ public class NumberUtils {
         return formatter.format(number);
     }
 
+    public static BigDecimal toBigDecimal(Object value) {
+        if (value == null)
+            return null;
+        if (value instanceof BigDecimal)
+            return (BigDecimal) value;
+        if (value instanceof BigInteger)
+            return new BigDecimal((BigInteger) value);
+        if (value instanceof Double)
+            return BigDecimal.valueOf((Double) value);
+        if (value instanceof Long)
+            return new BigDecimal((Long) value, MathContext.DECIMAL64);
+        if (value instanceof Integer)
+            return new BigDecimal((Integer) value, MathContext.DECIMAL64);
+        if (value instanceof String && Pattern.matches("^-?[0-9]+$", (String) value))
+            return new BigDecimal((String) value, MathContext.DECIMAL64);
+        throw new NumberFormatException("Unsupported data type: " + value.getClass().getName());
+    }
 }

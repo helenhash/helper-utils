@@ -43,6 +43,13 @@ List<Student> s = ListUtils.mergeCollections(list1, list2);
 ```java
 List<Student> s = ListUtils.mergeCollections(obj1, obj2);
 ```
+* Max of list numbers
+```java
+BigDecimal a = ListUtils.max(list);
+```
+
+* Find max
+
 * ... to be continued
 
 #### Maps
