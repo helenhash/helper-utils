@@ -15,10 +15,6 @@ public class NumberUtils {
 
     /**
      * Round bigDecimal number with some decimal places.
-     *
-     * @param number
-     * @param decimal
-     * @return
      */
     public static BigDecimal roundNumber(BigDecimal number, int decimal) {
         return number.setScale(decimal, RoundingMode.HALF_UP);
